@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All Comments</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<h1>All Comments</h1>
+<ul>
+  <% comments.forEach(function(comment) { %>
+    <li><strong>Title:</strong> <%= comment.title %> <strong>Author:</strong> <%= comment.author %> <strong>Comment:</strong> <%= comment.data %></li>
+  <% }) %>
+</ul>
+</body>
+</html>

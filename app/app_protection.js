@@ -3,11 +3,15 @@ const express = require('express');
 const app = express();
 const session = require('express-session');
 
+
+
 app.use(session({
-  secret: 'fwefjhi23awe34989wihvflwij',  
-  resave: false,              
-  saveUninitialized: false,   
-  cookie: { secure: false }   
+  secret: 'fwefjhi23awe34989wihvflwij',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: false // 如果使用HTTPS，请设置为true
+  }
 }));
 
 
@@ -32,7 +36,6 @@ app.use(cors({
 app.set('view engine', 'html');
 app.engine('html', require('ejs').renderFile);
 app.set('views', path.join(__dirname, 'public'));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
 var connection = mysql. createConnection ( {
@@ -44,12 +47,13 @@ var connection = mysql. createConnection ( {
 module.exports = connection;
 
 
+
 app.get('/', (req, res) => {
   console.log('main page');
   res.render('login');
 });
 
-// Log in page
+// Log in pag
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
   var hashed_password = crypto.createHash('sha1').update(password).digest('hex');
@@ -75,7 +79,7 @@ app.post('/login', (req, res) => {
 });
 
 // register
-app.get('/register', (req, res) => {
+app.get('/register',(req, res) => {
   console.log('register get');
   res.render('register');
 });
@@ -126,23 +130,6 @@ app.get('/error', (req, res) => {
   res.render('error');
 });
 
-// 更改密码的路由
-app.post('/change-password', (req, res) => {
-  console.log('change password');
-  const { username, newPassword } = req.body;
-  var hashed_password = crypto.createHash('sha1').update(newPassword).digest('hex');
-
-  connection.query('UPDATE users SET passwd = ? WHERE username = ?', [hashed_password, username], (err, results) => {
-    if (err) {
-      console.error('Error updating password:', err);
-      res.status(500).send('Failed to update password');
-      return;
-    }
-    res.send('Password updated successfully');
-  });
-  console.log('Received username:', username);
-  console.log('Received newPassword:', newPassword);
-});
 
 app.get('/csrf-attack', (req, res) => {
   if (req.session.username) {
@@ -153,7 +140,7 @@ app.get('/csrf-attack', (req, res) => {
 });
 
 
-app.get('/user-info', (req, res) => {
+app.get('/user-info',  (req, res) => {
   
   if (req.session.username) {
     res.json({ username: req.session.username, password: req.session.password });
@@ -184,6 +171,46 @@ app.post('/prototype-pollution', (req, res) => {
     res.send('You are not admin.');
   }
 });
+
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+const csrf = require('csurf');
+const csrfProtection = csrf({
+  cookie: {
+    secure: false, 
+    httpOnly: true, 
+    sameSite: 'strict' 
+  }
+});
+
+app.use(csrfProtection);
+
+
+
+
+app.get('/change-password', csrfProtection, (req, res) => {
+  res.render('change_passwd', { csrfToken: req.csrfToken() });
+});
+
+// 更改密码的路由
+app.post('/change-password', csrfProtection, (req, res) => {
+  console.log('change password');
+  const { username, newPassword } = req.body;
+  var hashed_password = crypto.createHash('sha1').update(newPassword).digest('hex');
+
+  connection.query('UPDATE users SET passwd = ? WHERE username = ?', [hashed_password, username], (err, results) => {
+    if (err) {
+      console.error('Error updating password:', err);
+      res.status(500).send('Failed to update password');
+      return;
+    }
+    res.send('Password updated successfully');
+  });
+  console.log('Received username:', username);
+  console.log('Received newPassword:', newPassword);
+});
+
 
 // start server
 app.listen(port, () => {

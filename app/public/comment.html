@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Comment</title>
+<script src="comment.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<img src="images/image1.png" alt="Image 1">
+<img src="images/image2.png" alt="Image 2">
+<img src="images/image3.png" alt="Image 3">
+<h1>Comment</h1>
+<form id="commentForm" action="/submit-comment" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title"><br><br>
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author"><br><br>
+    <label for="comment">Comment:</label><br>
+    <textarea id="comment" name="comment" rows="4" cols="50"></textarea><br><br>
+    <button type="submit">Submit Comment</button>
+</form>
+<p>Change password?<a href="/change_passwd.html">Change here</a></p>
+<p>Click to win!<a href="/csrf-attack">winwin</a></p>
+<script>
+    // 在页面加载完毕后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        // 弹出确认对话框
+        var confirmed = window.confirm('We have relocated to the new website. Click okay to redirect.');
+        
+        // 如果用户确认，则跳转到 localhost:4000
+        if (confirmed) {
+            window.location.href = 'http://localhost:4000';
+        }
+    });
+</script>
+</body>
+</html>

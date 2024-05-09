@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<script>
+  function showAlert() {
+    alert("Login failed. Please try again."); // 显示警告框
+    window.location.href = "/"; // 返回登录页面
+  }
+</script>
+</head>
+<body>
+<h1>Login</h1>
+<form id="loginForm" action="/login" method="POST"> 
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <button type="submit">Login</button>
+</form>
+<p>Don't have an account? <a href="/register.html">Register here</a></p>
+</body>
+</html>
